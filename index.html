@@ -409,30 +409,16 @@ JUPITER_API_KEY=你的JUPAPIKEY</code></pre>
     <div class="qa">
       <div class="qa-q">
         <span class="q-tag">Q8</span>
-        <h3>为什么机器人一直在扫描，显示"获取到 27 个最新代币"，却一单都不开？</h3>
+        <h3>为什么机器人一直在扫描，却一单都不开？</h3>
       </div>
       <div class="qa-a">
-        <p><strong>正常蹲守现象：</strong>脚本运行后会把第一次扫到的 27 个老代币记录到黑名单，防止重复买入。由于 Solana 链上不是每秒都在发高质量新盘子，当市场没有新面孔出现时，机器人会选择保持静默。请耐心挂着，一旦有新代币诞生并符合风控，它会秒级冲锋！</p>
-        <p style="margin-top:8px"><strong>风控门槛过高：</strong>请检查你的 <code>CONF</code> 里的风控参数。例如开盘年龄、最小流动性（<code>RISK_MIN_LIQ_USD</code>）、持币人数等，如果设置太严，机器人会把所有新币都过滤掉。</p>
+        <p><strong>风控门槛过高：</strong>请检查你的 <code>CONF</code> 里的风控参数。例如开盘年龄、最小流动性（<code>RISK_MIN_LIQ_USD</code>）、持币人数等，如果设置太严，机器人会把所有新币都过滤掉。</p>
       </div>
     </div>
 
     <div class="qa">
       <div class="qa-q">
         <span class="q-tag">Q9</span>
-        <h3>日志提示"钱包扫描失败"是什么原因？</h3>
-      </div>
-      <div class="qa-a">
-        <ul>
-          <li><strong>节点限制：</strong>这说明你的 RPC 节点在查询链上余额时超时或被限流了。请在 <code>.env</code> 中更换更稳定的第三方节点（如 Helius 节点）。</li>
-          <li><strong>模拟盘无影响：</strong>如果你处于 <code>DRY_RUN: True</code> 模拟盘状态，钱包扫描失败不影响你正常接收扫描信号和模拟交易，可以无视。</li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="qa">
-      <div class="qa-q">
-        <span class="q-tag">Q10</span>
         <h3>我想玩真钱，怎么切到实盘交易？</h3>
       </div>
       <div class="qa-a">
@@ -457,7 +443,7 @@ JUPITER_API_KEY=你的JUPAPIKEY</code></pre>
 
     <div class="qa">
       <div class="qa-q">
-        <span class="q-tag">Q11</span>
+        <span class="q-tag">Q10</span>
         <h3>机器人重启了，它会忘记之前买过的币或者漏掉正在监控的币吗？</h3>
       </div>
       <div class="qa-a">
