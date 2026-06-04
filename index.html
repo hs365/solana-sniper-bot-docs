@@ -419,6 +419,13 @@ JUPITER_API_KEY=你的JUPAPIKEY</code></pre>
           <li><strong>模拟盘（默认）：</strong><code>"DRY_RUN": True</code>（只打日志、模拟发 TG，不花真钱，自带 1% 模拟损耗）。</li>
           <li><strong>实盘交易：</strong><code>"DRY_RUN": False</code>（真刀真枪，直接调用 Jupiter 消耗钱包里的 SOL 上链交互）。</li>
         </ul>
+        <div class="warn" style="background:rgba(255,122,89,.08);border-color:rgba(255,122,89,.3);color:#ffd9c4">
+          <span class="warn-icon">🗑️</span>
+          <div><strong>切到实盘前务必删除这两个文件！</strong>在切换到实盘（<code>"DRY_RUN": False</code>）并首次启动前，请务必在脚本目录下删除以下两个文件：<br><br>
+          <strong>🗑️ <code>active_positions.json</code>（持仓缓存）</strong>：你在模拟盘买入的那些币，其实钱包里并没有真币。如果不删掉这个文件，切到实盘后，机器人会以为你真的持有这些币，并尝试去链上真实卖出，结果肯定会一直报错"钱包余额不足"。<br><br>
+          <strong>🗑️ <code>trade_history.csv</code>（交易账本）</strong>：这里面记录的是模拟盘的"假账"。如果不清空，它不仅会弄乱你后续真实的盈亏统计，还可能导致机器人误以为某个刚发的新币"已经买过了"，从而触发防重复买入机制，错失真的上车机会。
+          </div>
+        </div>
         <div class="warn">
           <span class="warn-icon">⚠️</span>
           <div><strong>实盘警告：</strong>首次切到实盘，请务必将 <code>INVEST_SOL</code> 改小（如 <code>0.01</code>），确认买卖流程无误后，再放大资金！</div>
