@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Solana 金狗极速狙击机器人 (V0.63) — 用户使用指南</title>
+<meta name="description" content="专为 Solana 土狗盘（含 Pump.fun）打造的高频自动化狙击与全自动止盈止损系统。5秒询价、5重出局、模拟盘/实盘双模切换。" />
+<style>
+  :root{
+    --bg:#0a0a12;
+    --bg-soft:#11111c;
+    --bg-card:#16162a;
+    --line:#262640;
+    --text:#e6e6f0;
+    --text-dim:#9b9bb5;
+    --accent:#9945ff;     /* Solana 紫 */
+    --accent-2:#14f195;   /* Solana 绿 */
+    --accent-3:#ff7a59;   /* 暖橙点缀 */
+    --danger:#ff5577;
+    --code-bg:#0d0d1a;
+    --shadow:0 10px 40px rgba(153,69,255,.15);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;line-height:1.7;-webkit-font-smoothing:antialiased;scroll-behavior:smooth}
+  a{color:var(--accent-2);text-decoration:none}
+  a:hover{text-decoration:underline}
+  code,pre{font-family:"JetBrains Mono","Fira Code",Menlo,Consolas,monospace}
+
+  /* 背景光晕 */
+  body::before{
+    content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+    background:
+      radial-gradient(800px 500px at 10% -10%, rgba(153,69,255,.18), transparent 60%),
+      radial-gradient(700px 500px at 110% 10%, rgba(20,241,149,.12), transparent 60%),
+      radial-gradient(900px 600px at 50% 110%, rgba(255,122,89,.08), transparent 60%);
+  }
+
+  /* 顶部导航 */
+  header{
+    position:sticky;top:0;z-index:50;backdrop-filter:blur(14px);
+    background:rgba(10,10,18,.7);border-bottom:1px solid var(--line);
+  }
+  .nav{max-width:1100px;margin:0 auto;padding:14px 24px;display:flex;align-items:center;justify-content:space-between}
+  .logo{font-weight:700;letter-spacing:.5px;display:flex;align-items:center;gap:10px}
+  .logo-dot{width:10px;height:10px;border-radius:50%;background:linear-gradient(135deg,var(--accent),var(--accent-2));box-shadow:0 0 12px var(--accent)}
+  .nav-links a{color:var(--text-dim);margin-left:22px;font-size:14px}
+  .nav-links a:hover{color:var(--text);text-decoration:none}
+  .badge{display:inline-block;padding:2px 8px;border-radius:999px;background:rgba(20,241,149,.12);color:var(--accent-2);font-size:11px;border:1px solid rgba(20,241,149,.3);margin-left:8px}
+
+  /* Hero */
+  .hero{max-width:1100px;margin:0 auto;padding:80px 24px 60px;text-align:center;position:relative}
+  .hero h1{
+    font-size:clamp(32px,5vw,56px);font-weight:800;line-height:1.15;letter-spacing:-.5px;
+    background:linear-gradient(135deg,#fff 0%, #b8a4ff 40%, #14f195 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+    margin-bottom:18px;
+  }
+  .hero p.lead{font-size:clamp(15px,1.6vw,18px);color:var(--text-dim);max-width:760px;margin:0 auto 36px}
+  .hero-cta{display:inline-flex;gap:14px;flex-wrap:wrap;justify-content:center}
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;padding:12px 22px;border-radius:10px;font-weight:600;font-size:14px;
+    transition:transform .15s, box-shadow .15s, background .15s;
+  }
+  .btn-primary{background:linear-gradient(135deg,var(--accent),#7a2be0);color:#fff;box-shadow:var(--shadow)}
+  .btn-primary:hover{transform:translateY(-2px);box-shadow:0 14px 50px rgba(153,69,255,.35);text-decoration:none}
+  .btn-ghost{border:1px solid var(--line);color:var(--text);background:rgba(255,255,255,.02)}
+  .btn-ghost:hover{background:rgba(255,255,255,.05);text-decoration:none}
+
+  /* 指标条 */
+  .stats{max-width:1100px;margin:50px auto 0;padding:0 24px;display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  .stat{
+    background:var(--bg-card);border:1px solid var(--line);border-radius:14px;padding:20px;text-align:center;
+    transition:transform .2s, border-color .2s;
+  }
+  .stat:hover{transform:translateY(-3px);border-color:rgba(153,69,255,.5)}
+  .stat .num{font-size:28px;font-weight:800;background:linear-gradient(135deg,var(--accent),var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .stat .label{color:var(--text-dim);font-size:13px;margin-top:4px}
+
+  /* 章节 */
+  section{max-width:1100px;margin:0 auto;padding:60px 24px}
+  .section-head{display:flex;align-items:center;gap:14px;margin-bottom:36px;flex-wrap:wrap}
+  .section-num{
+    width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(135deg,var(--accent),var(--accent-2));color:#0a0a12;font-weight:800;font-size:18px;
+    box-shadow:0 6px 20px rgba(153,69,255,.3);
+  }
+  .section-head h2{font-size:28px;font-weight:700}
+  .section-head p{color:var(--text-dim);font-size:14px;flex-basis:100%;margin-top:-6px}
+
+  /* Q&A 卡片 */
+  .qa-list{display:flex;flex-direction:column;gap:18px}
+  .qa{
+    background:var(--bg-card);border:1px solid var(--line);border-radius:16px;padding:24px 26px;
+    transition:border-color .2s, transform .2s;
+  }
+  .qa:hover{border-color:rgba(153,69,255,.45);transform:translateX(2px)}
+  .qa-q{display:flex;gap:14px;align-items:flex-start;margin-bottom:12px}
+  .q-tag{
+    flex-shrink:0;padding:3px 10px;border-radius:6px;font-size:12px;font-weight:700;letter-spacing:.5px;
+    background:rgba(153,69,255,.15);color:var(--accent);border:1px solid rgba(153,69,255,.3);
+  }
+  .qa-q h3{font-size:17px;font-weight:700;line-height:1.5;color:#fff}
+  .qa-a{color:var(--text-dim);font-size:15px;padding-left:0}
+  .qa-a strong{color:var(--text);font-weight:600}
+  .qa-a ul, .qa-a ol{margin:10px 0 10px 22px}
+  .qa-a li{margin-bottom:6px}
+  .qa-a code{
+    background:rgba(255,255,255,.06);padding:1px 6px;border-radius:4px;font-size:13px;color:#ffd28a;
+    border:1px solid rgba(255,255,255,.05);
+  }
+
+  /* 代码块 */
+  pre{
+    background:var(--code-bg);border:1px solid var(--line);border-radius:12px;padding:16px 18px;
+    overflow-x:auto;margin:14px 0;font-size:13.5px;line-height:1.6;
+  }
+  pre code{color:#d6d6e7}
+  .lang-tag{
+    display:inline-block;font-size:11px;color:var(--text-dim);background:rgba(255,255,255,.05);
+    padding:2px 8px;border-radius:4px;margin-bottom:6px;letter-spacing:.5px;text-transform:uppercase;
+  }
+
+  /* 提示框 */
+  .tip{
+    display:flex;gap:12px;align-items:flex-start;padding:14px 18px;border-radius:10px;
+    background:rgba(20,241,149,.06);border:1px solid rgba(20,241,149,.2);color:#cdfbe6;
+    margin:12px 0;font-size:14px;
+  }
+  .warn{
+    display:flex;gap:12px;align-items:flex-start;padding:14px 18px;border-radius:10px;
+    background:rgba(255,85,119,.06);border:1px solid rgba(255,85,119,.25);color:#ffd0d8;
+    margin:12px 0;font-size:14px;
+  }
+  .tip-icon,.warn-icon{flex-shrink:0;font-size:18px;line-height:1.5}
+
+  /* Footer */
+  footer{
+    border-top:1px solid var(--line);margin-top:60px;padding:40px 24px;text-align:center;color:var(--text-dim);font-size:13px;
+  }
+  .footer-links a{margin:0 12px}
+
+  /* 响应式 */
+  @media (max-width:768px){
+    .stats{grid-template-columns:repeat(2,1fr)}
+    .nav-links{display:none}
+    .hero{padding:50px 20px 30px}
+    section{padding:40px 20px}
+    .qa{padding:18px}
+  }
+  @media (max-width:480px){
+    .stats{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <nav class="nav">
+    <div class="logo"><span class="logo-dot"></span>Solana Sniper Bot <span class="badge">V0.63</span></div>
+    <div class="nav-links">
+      <a href="#features">亮点</a>
+      <a href="#setup">上手</a>
+      <a href="#faq">FAQ</a>
+      <a href="TECH_PREVIEW.md" target="_blank" rel="noopener">技术预览</a>
+      <a href="https://github.com/hs365/solana-sniper-bot-docs" target="_blank" rel="noopener">GitHub ↗</a>
+    </div>
+  </nav>
+</header>
+
+<!-- ===================== HERO ===================== -->
+<section class="hero">
+  <h1>Solana 金狗极速狙击机器人</h1>
+  <p class="lead">专为 Solana 土狗盘（含 <strong>Pump.fun</strong>）打造的高频自动化狙击与全自动止盈止损系统。秒级抓盘、5 秒询价、5 重出局、模拟盘/实盘一键切换。</p>
+  <div class="hero-cta">
+    <a class="btn btn-primary" href="#setup">⚡ 立即开始</a>
+    <a class="btn btn-ghost" href="https://github.com/hs365/solana-sniper-bot-docs" target="_blank" rel="noopener">📖 查看技术预览</a>
+    <a class="btn btn-ghost" href="https://github.com/hs365/solana-sniper-bot-docs" target="_blank" rel="noopener">GitHub</a>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="num">2x</div><div class="label">双重极速扫描</div></div>
+    <div class="stat"><div class="num">5s</div><div class="label">链上询价频率</div></div>
+    <div class="stat"><div class="num">2</div><div class="label">模拟/实盘双模</div></div>
+    <div class="stat"><div class="num">5</div><div class="label">重智能出局策略</div></div>
+  </div>
+</section>
+
+<!-- ===================== 第一部分：核心亮点 ===================== -->
+<section id="features">
+  <div class="section-head">
+    <div class="section-num">1</div>
+    <h2>核心亮点与特别之处</h2>
+    <p>为什么不只是又一个 sniper？</p>
+  </div>
+
+  <div class="qa-list">
+
+    <div class="qa">
+      <div class="qa-q">
+        <span class="q-tag">Q1</span>
+        <h3>这个脚本有什么特别之处？为什么要用它？</h3>
+      </div>
+      <div class="qa-a">
+        <ul>
+          <li><strong>双重极速扫描：</strong>采用全新的底层 TLS 伪装技术，直接穿透 Cloudflare 防护，秒级抓取最新上线的潜力代币。</li>
+          <li><strong>全自动追踪监控：</strong>买入后，机器人会启动独立线程，每 5 秒在链上询价，比肉眼看 K 线快百倍。</li>
+          <li><strong>双模一键切换：</strong>支持"模拟盘（Dry Run）"和"实盘"一键切换。在不花真钱的情况下，也能带你完整体验抢盘、扣税、出局的真实战场。</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="qa">
+      <div class="qa-q">
+        <span class="q-tag">Q2</span>
+        <h3>听闻土狗盘骗局极多，这台机器人如何防 RUG（跑路）？</h3>
+      </div>
+      <div class="qa-a">
+        <p>它内置了一套极其强悍的 <strong>【智能合约黑心权限风控雷达】</strong>：</p>
+        <ul>
+          <li><strong>放弃增发/冻结：</strong>自动检测项目方是否丢弃了 Mint 和 Freeze 权限，有增发或冻结直接枪毙，防貔貅盘。</li>
+          <li><strong>前 10 大户与老鼠仓过滤：</strong>前 10 大地址持币占比过高、内部人员（Dev 团队）持仓过高的盘子一律不碰。</li>
+          <li><strong>池子锁定检查：</strong>普通盘流动性池（LP）未锁定或锁仓比例低于 80% 的直接过滤。</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="qa">
+      <div class="qa-q">
+        <span class="q-tag">Q3</span>
+        <h3>它的自定义功能多吗？我能调整哪些策略？</h3>
+      </div>
+      <div class="qa-a">
+        <p>非常丰富！所有核心参数都集中在代码顶部的 <code>CONF</code> 字典中，你可以自由调整：</p>
+        <ul>
+          <li><strong>资金控制：</strong>自定义单笔投入（<code>INVEST_SOL</code>）和钱包安全留存底线（<code>MIN_RESERVE_SOL</code>）。</li>
+          <li><strong>滑点控制：</strong>买入/卖出滑点独立配置，支持卖出失败时自动放大滑点的"逃生通道"。</li>
+          <li><strong>5 重出局策略：</strong>
+            <ul>
+              <li>静态止盈（默认涨 50% 自动分批回本）</li>
+              <li>静态止损（如跌 15% 果断割肉）</li>
+              <li>移动追踪止损（最高点回撤 20% 保护利润出局）</li>
+              <li>保本逃生（涨过 10% 后如果跌回 2% 成本线，强制保本平仓）</li>
+              <li>超时强制平仓（超过 8 分钟不管输赢强制砸盘，防归零）</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===================== 第二部分：上手 ===================== -->
+<section id="setup">
+  <div class="section-head">
+    <div class="section-num">2</div>
+    <h2>新手上路与环境配置</h2>
+    <p>从 0 到运行，5 分钟搞定</p>
+  </div>
+
+  <div class="qa-list">
+
+    <div class="qa">
+      <div class="qa-q">
+        <span class="q-tag">Q4</span>
+        <h3>第一次拿到脚本，我的电脑/服务器需要安装什么？</h3>
+      </div>
+      <div class="qa-a">
+        <p>本机器人基于 <strong>Python 3.10+</strong> 开发。请先确保你安装了 Python，然后打开终端（Terminal 或 CMD）运行以下命令，一键安装所有依赖库：</p>
+        <span class="lang-tag">bash</span>
+<pre><code>pip install asyncio aiohttp solders solana colorama python-dotenv curl_cffi requests</code></pre>
+      </div>
+    </div>
+
+    <div class="qa">
+      <div class="qa-q">
+        <span class="q-tag">Q5</span>
+        <h3>如何配置我的钱包和节点（.env 文件）？</h3>
+      </div>
+      <div class="qa-a">
+        <p>在脚本同级目录下，新建一个名为 <code>.env</code> 的文本文件（注意前面有一个点），里面填入以下内容：</p>
+        <span class="lang-tag">ini / toml</span>
+<pre><code># 你的 Solana 钱包私钥 (Base58 格式，去 Phantom 或 Solflare 钱包导出)
+SOL_PRIVATE_KEY=你的真实私钥
+
+# 你的高级 RPC 节点地址 (强烈建议去 Helius 或 QuickNode 申请免费/付费专属节点，不要用公共节点)
+RPC_URLS=https://mainnet.helius-rpc.com/?api-key=你的Key
+
+# Telegram 通知配置（可选）
+TG_BOT_TOKEN=你的TG机器人Token
+TG_CHAT_ID=你的TG群或频道ID
+
+# API 密钥配置（可选，有的话速度更快）
+JUPITER_API_KEY=你的JUPAPIKEY</code></pre>
+        <div class="warn">
+          <span class="warn-icon">⚠️</span>
+          <div><strong>安全警告：</strong>私钥等于你的钱包控制权，<code>.env</code> 文件切勿上传到 GitHub、截图发群、分享给任何人。建议使用专门用于跑机器人的"热钱包"。</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="qa">
+      <div class="qa-q">
+        <span class="q-tag">Q6</span>
+        <h3>配置好了，怎么启动运行？</h3>
+      </div>
+      <div class="qa-a">
+        <p>打开终端，切换到脚本所在目录，执行以下命令即可：</p>
+        <span class="lang-tag">bash</span>
+<pre><code>python sol_8.py</code></pre>
+        <div class="tip">
+          <span class="tip-icon">💡</span>
+          <div>建议用 <code>tmux</code> / <code>screen</code> / <code>nohup</code> 在服务器后台跑，关掉 SSH 也不会断。</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===================== 第三部分：FAQ ===================== -->
+<section id="faq">
+  <div class="section-head">
+    <div class="section-num">3</div>
+    <h2>常见问题与排查 (FAQ)</h2>
+    <p>遇到问题先看这里</p>
+  </div>
+
+  <div class="qa-list">
+
+    <div class="qa">
+      <div class="qa-q">
+        <span class="q-tag">Q7</span>
+        <h3>为什么机器人一直在扫描，显示"获取到 27 个最新代币"，却一单都不开？</h3>
+      </div>
+      <div class="qa-a">
+        <p><strong>正常蹲守现象：</strong>脚本运行后会把第一次扫到的 27 个老代币记录到黑名单，防止重复买入。由于 Solana 链上不是每秒都在发高质量新盘子，当市场没有新面孔出现时，机器人会选择保持静默。请耐心挂着，一旦有新代币诞生并符合风控，它会秒级冲锋！</p>
+        <p style="margin-top:8px"><strong>风控门槛过高：</strong>请检查你的 <code>CONF</code> 里的风控参数。例如开盘年龄、最小流动性（<code>RISK_MIN_LIQ_USD</code>）、持币人数等，如果设置太严，机器人会把所有新币都过滤掉。</p>
+      </div>
+    </div>
+
+    <div class="qa">
+      <div class="qa-q">
+        <span class="q-tag">Q8</span>
+        <h3>日志提示"钱包扫描失败"是什么原因？</h3>
+      </div>
+      <div class="qa-a">
+        <ul>
+          <li><strong>节点限制：</strong>这说明你的 RPC 节点在查询链上余额时超时或被限流了。请在 <code>.env</code> 中更换更稳定的第三方节点（如 Helius 节点）。</li>
+          <li><strong>模拟盘无影响：</strong>如果你处于 <code>DRY_RUN: True</code> 模拟盘状态，钱包扫描失败不影响你正常接收扫描信号和模拟交易，可以无视。</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="qa">
+      <div class="qa-q">
+        <span class="q-tag">Q9</span>
+        <h3>我想玩真钱，怎么切到实盘交易？</h3>
+      </div>
+      <div class="qa-a">
+        <p>非常简单，只需要修改代码配置区（大概第 112 行）的一个开关：</p>
+        <ul>
+          <li><strong>模拟盘（默认）：</strong><code>"DRY_RUN": True</code>（只打日志、模拟发 TG，不花真钱，自带 1% 模拟损耗）。</li>
+          <li><strong>实盘交易：</strong><code>"DRY_RUN": False</code>（真刀真枪，直接调用 Jupiter 消耗钱包里的 SOL 上链交互）。</li>
+        </ul>
+        <div class="warn">
+          <span class="warn-icon">⚠️</span>
+          <div><strong>实盘警告：</strong>首次切到实盘，请务必将 <code>INVEST_SOL</code> 改小（如 <code>0.01</code>），确认买卖流程无误后，再放大资金！</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="qa">
+      <div class="qa-q">
+        <span class="q-tag">Q10</span>
+        <h3>机器人重启了，它会忘记之前买过的币或者漏掉正在监控的币吗？</h3>
+      </div>
+      <div class="qa-a">
+        <p>不会，它有完美的 <strong>"记忆恢复机制"</strong>：</p>
+        <ul>
+          <li>机器人每次买卖都会记录在 <code>trade_history.csv</code> 账本里，开机时会自动读取，绝不吃回头草。</li>
+          <li>未平仓的币会保存在 <code>active_positions.json</code> 缓存文件中，重启后脚本会自动无缝恢复监控，接管你的资产。</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===================== 结尾提示 ===================== -->
+<section style="padding-top:0">
+  <div class="tip" style="background:rgba(153,69,255,.08);border-color:rgba(153,69,255,.25);color:#e0d2ff">
+    <span class="tip-icon">💡</span>
+    <div><strong>小提示：</strong>土狗市场瞬息万变，建议先在 <code>DRY_RUN: True</code> 模式下挂机运行 1~2 天，熟悉机器人的出局逻辑与 TG 播报后，再考虑小资金切入实盘。<strong>DYOR！</strong></div>
+  </div>
+</section>
+
+<footer>
+  <div>© 2026 hs365 · 仅供学习研究 · 区块链有风险，投资需谨慎</div>
+  <div class="footer-links" style="margin-top:10px">
+    <a href="https://github.com/hs365/solana-sniper-bot-docs" target="_blank" rel="noopener">GitHub</a>·
+    <a href="TECH_PREVIEW.md" target="_blank" rel="noopener">技术预览</a>·
+    <a href="#features">亮点</a>·
+    <a href="#setup">上手</a>·
+    <a href="#faq">FAQ</a>
+  </div>
+</footer>
+
+</body>
+</html>
