@@ -218,27 +218,15 @@
 
   <div class="showcase-grid">
     <figure class="shot">
-      <div class="shot-tag">启动监控</div>
-      <img src="assets/images/screenshot-startup.jpg" alt="机器人启动 banner" loading="lazy" />
-      <figcaption>🚀 机器人启动 V0.63，从历史记忆屏蔽老币、恢复持仓监控、穿透 Cloudflare 扫描新币</figcaption>
-    </figure>
-
-    <figure class="shot">
-      <div class="shot-tag">实时询价</div>
-      <img src="assets/images/screenshot-monitoring.jpg" alt="5秒实时询价" loading="lazy" />
-      <figcaption>📊 5 秒一轮链上询价、实时盈亏、买入/撤单追踪，所有信息一目了然</figcaption>
+      <div class="shot-tag">终端监控</div>
+      <img src="assets/images/screenshot-startup.jpg" alt="机器人实时运行终端" loading="lazy" />
+      <figcaption>📊 机器人实时运行中：V0.63 启动、5 秒一轮链上询价、实时盈亏、黑名单过滤一屏可见</figcaption>
     </figure>
 
     <figure class="shot">
       <div class="shot-tag">TG 推送</div>
-      <img src="assets/images/screenshot-tg-alert.jpg" alt="TG 新币推送" loading="lazy" />
-      <figcaption>🔔 TG 实时推送：代币信息、自动买入按钮、GMGN K线、风险提示一应俱全</figcaption>
-    </figure>
-
-    <figure class="shot">
-      <div class="shot-tag">盈亏播报</div>
-      <img src="assets/images/screenshot-tg-pnl.jpg" alt="TG 盈亏播报" loading="lazy" />
-      <figcaption>🟢 持仓轮询 + 每分钟状态汇总：SOL 余额、持仓数、实时浮盈（图中 +16.63% 为实盘单笔实测）</figcaption>
+      <img src="assets/images/screenshot-tg-alert.jpg" alt="TG 新币推送与盈亏播报" loading="lazy" />
+      <figcaption>🔔 TG 实时推送：新币信息 + 自动买入 + 盈亏播报，所有动作一条不漏送到手机</figcaption>
     </figure>
   </div>
 </section>
@@ -389,6 +377,16 @@ JUPITER_API_KEY=你的JUPAPIKEY</code></pre>
     <div class="qa">
       <div class="qa-q">
         <span class="q-tag">Q7</span>
+        <h3>机器人买入代币后，多久查询一次价格？</h3>
+      </div>
+      <div class="qa-a">
+        <p>机器人为每个持仓代币启动了专属的独立监控线程，默认每 <strong>5 秒</strong>进行一次高频询价。同时，系统内置行情加速算法，当价格剧烈波动或逼近止盈止损线时，会自动提升询价频率至<strong>毫秒级</strong>，确保绝不漏掉任何一个逃生或暴富的机会！</p>
+      </div>
+    </div>
+
+    <div class="qa">
+      <div class="qa-q">
+        <span class="q-tag">Q8</span>
         <h3>为什么机器人一直在扫描，显示"获取到 27 个最新代币"，却一单都不开？</h3>
       </div>
       <div class="qa-a">
@@ -399,7 +397,7 @@ JUPITER_API_KEY=你的JUPAPIKEY</code></pre>
 
     <div class="qa">
       <div class="qa-q">
-        <span class="q-tag">Q8</span>
+        <span class="q-tag">Q9</span>
         <h3>日志提示"钱包扫描失败"是什么原因？</h3>
       </div>
       <div class="qa-a">
@@ -412,7 +410,7 @@ JUPITER_API_KEY=你的JUPAPIKEY</code></pre>
 
     <div class="qa">
       <div class="qa-q">
-        <span class="q-tag">Q9</span>
+        <span class="q-tag">Q10</span>
         <h3>我想玩真钱，怎么切到实盘交易？</h3>
       </div>
       <div class="qa-a">
@@ -430,7 +428,7 @@ JUPITER_API_KEY=你的JUPAPIKEY</code></pre>
 
     <div class="qa">
       <div class="qa-q">
-        <span class="q-tag">Q10</span>
+        <span class="q-tag">Q11</span>
         <h3>机器人重启了，它会忘记之前买过的币或者漏掉正在监控的币吗？</h3>
       </div>
       <div class="qa-a">
