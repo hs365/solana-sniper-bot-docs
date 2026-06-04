@@ -139,6 +139,28 @@
   }
   .footer-links a{margin:0 12px}
 
+  /* 实战截图区 */
+  .showcase-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-top:10px}
+  .shot{
+    position:relative;background:var(--bg-card);border:1px solid var(--line);border-radius:14px;
+    overflow:hidden;transition:transform .2s, border-color .2s;
+  }
+  .shot:hover{transform:translateY(-3px);border-color:rgba(20,241,149,.4)}
+  .shot img{display:block;width:100%;height:auto;background:#000}
+  .shot-tag{
+    position:absolute;top:12px;left:12px;z-index:2;
+    background:rgba(153,69,255,.85);color:#fff;font-size:12px;font-weight:600;
+    padding:4px 10px;border-radius:6px;letter-spacing:.5px;
+    backdrop-filter:blur(4px);
+  }
+  .shot figcaption{
+    padding:14px 18px;font-size:13.5px;color:var(--text-dim);line-height:1.6;
+    border-top:1px solid var(--line);
+  }
+  @media (max-width:768px){
+    .showcase-grid{grid-template-columns:1fr}
+  }
+
   /* 响应式 */
   @media (max-width:768px){
     .stats{grid-template-columns:repeat(2,1fr)}
@@ -159,10 +181,11 @@
     <div class="logo"><span class="logo-dot"></span>Solana Sniper Bot <span class="badge">V0.63</span></div>
     <div class="nav-links">
       <a href="#features">亮点</a>
+      <a href="#showcase">战绩</a>
       <a href="#setup">上手</a>
       <a href="#faq">FAQ</a>
+      <a href="https://t.me/xianyu063" target="_blank" rel="noopener">演示</a>
       <a href="TECH_PREVIEW.md" target="_blank" rel="noopener">技术预览</a>
-      <a href="https://github.com/hs365/solana-sniper-bot-docs" target="_blank" rel="noopener">GitHub ↗</a>
     </div>
   </nav>
 </header>
@@ -182,6 +205,41 @@
     <div class="stat"><div class="num">5s</div><div class="label">链上询价频率</div></div>
     <div class="stat"><div class="num">2</div><div class="label">模拟/实盘双模</div></div>
     <div class="stat"><div class="num">5</div><div class="label">重智能出局策略</div></div>
+  </div>
+</section>
+
+<!-- ===================== 实战战绩 ===================== -->
+<section id="showcase" style="padding-top:30px">
+  <div class="section-head">
+    <div class="section-num">★</div>
+    <h2>真实运行截图（已脱敏）</h2>
+    <p>看一万遍介绍不如看一张实跑 — 下面是从线上机器人实时截取的画面</p>
+  </div>
+
+  <div class="showcase-grid">
+    <figure class="shot">
+      <div class="shot-tag">启动监控</div>
+      <img src="assets/images/screenshot-startup.jpg" alt="机器人启动 banner" loading="lazy" />
+      <figcaption>🚀 机器人启动 V0.63，从历史记忆屏蔽老币、恢复持仓监控、穿透 Cloudflare 扫描新币</figcaption>
+    </figure>
+
+    <figure class="shot">
+      <div class="shot-tag">实时询价</div>
+      <img src="assets/images/screenshot-monitoring.jpg" alt="5秒实时询价" loading="lazy" />
+      <figcaption>📊 5 秒一轮链上询价、实时盈亏、买入/撤单追踪，所有信息一目了然</figcaption>
+    </figure>
+
+    <figure class="shot">
+      <div class="shot-tag">TG 推送</div>
+      <img src="assets/images/screenshot-tg-alert.jpg" alt="TG 新币推送" loading="lazy" />
+      <figcaption>🔔 TG 实时推送：代币信息、自动买入按钮、GMGN K线、风险提示一应俱全</figcaption>
+    </figure>
+
+    <figure class="shot">
+      <div class="shot-tag">盈亏播报</div>
+      <img src="assets/images/screenshot-tg-pnl.jpg" alt="TG 盈亏播报" loading="lazy" />
+      <figcaption>🟢 持仓轮询 + 每分钟状态汇总：SOL 余额、持仓数、实时浮盈（图中 +16.63% 为实盘单笔实测）</figcaption>
+    </figure>
   </div>
 </section>
 
@@ -402,6 +460,7 @@ JUPITER_API_KEY=你的JUPAPIKEY</code></pre>
     <a href="https://github.com/hs365/solana-sniper-bot-docs" target="_blank" rel="noopener">GitHub</a>·
     <a href="TECH_PREVIEW.md" target="_blank" rel="noopener">技术预览</a>·
     <a href="#features">亮点</a>·
+    <a href="#showcase">战绩</a>·
     <a href="#setup">上手</a>·
     <a href="#faq">FAQ</a>
   </div>
