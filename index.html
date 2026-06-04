@@ -158,6 +158,15 @@
     padding:14px 18px;font-size:13.5px;color:var(--text-dim);line-height:1.6;
     border-top:1px solid var(--line);
   }
+  .conf-shot{
+    position:relative;margin:18px 0 6px;border-radius:12px;overflow:hidden;
+    border:1px solid var(--line);background:#000;
+  }
+  .conf-shot img{display:block;width:100%;height:auto}
+  .conf-shot figcaption{
+    padding:12px 16px;font-size:12.5px;color:var(--text-dim);line-height:1.6;
+    background:var(--bg-soft);border-top:1px solid var(--line);
+  }
   @media (max-width:768px){
     .showcase-grid{grid-template-columns:1fr}
   }
@@ -291,6 +300,11 @@
             </ul>
           </li>
         </ul>
+        <figure class="conf-shot">
+          <div class="shot-tag" style="background:rgba(20,241,149,.85)">CONF 参数表</div>
+          <img src="assets/images/screenshot-conf.jpg" alt="CONF 参数配置字典（实拍）" loading="lazy" />
+          <figcaption>📷 上图为脚本顶部 <code>CONF</code> 字典的实拍：每个参数都附有详细中文注释，包括资金控制、滑点、5 重止盈止损策略、风控雷达等 20+ 项可调参数。即使你没有 Python 经验，也能根据自身交易风格逐项调整。</figcaption>
+        </figure>
       </div>
     </div>
 
